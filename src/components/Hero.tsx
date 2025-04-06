@@ -1,6 +1,21 @@
+"use client";
+
 import React from "react";
+import { useRouter } from "next/navigation";
 
 export function Hero() {
+  const router = useRouter();
+  const [search, setSearch] = React.useState("");
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (search.trim()) {
+      router.push(`/?tags=${encodeURIComponent(search.trim())}`);
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <div className="w-full py-12 md:py-20">
       <div className="container mx-auto px-4">
@@ -21,10 +36,15 @@ export function Hero() {
             Discover curated remote job opportunities from around the world.
             Connect with companies that value talent regardless of location.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col sm:flex-row gap-4 w-full max-w-md"
+          >
             <input
               type="text"
-              placeholder="Search jobs..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search by skills (e.g., React, Python, AWS)..."
               className="flex-1 px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[var(--button-primary-bg)] transition-colors"
               style={{
                 backgroundColor: "var(--input-bg)",
@@ -33,6 +53,7 @@ export function Hero() {
               }}
             />
             <button
+              type="submit"
               className="px-6 py-3 font-medium rounded-lg transition-colors"
               style={{
                 backgroundColor: "var(--button-primary-bg)",
@@ -41,8 +62,7 @@ export function Hero() {
             >
               Search
             </button>
-          </div>
-
+          </form>
         </div>
       </div>
     </div>
