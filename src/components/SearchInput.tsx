@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useDebounce } from "@/hooks/useDebounce";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export function SearchInput() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -13,6 +15,11 @@ export function SearchInput() {
   const debouncedSearch = useDebounce(search, 300);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+
+  const currentFilters = useMemo(
+    () => searchParams.get("tags")?.split(",").filter(Boolean) || [],
+    [searchParams]
+  );
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -23,8 +30,15 @@ export function SearchInput() {
 
       setIsLoading(true);
       try {
+        const currentTagsParam =
+          currentFilters.length > 0
+            ? `&currentTags=${encodeURIComponent(currentFilters.join(","))}`
+            : "";
+
         const response = await fetch(
-          `/api/tags?q=${encodeURIComponent(debouncedSearch)}`
+          `/api/tags?q=${encodeURIComponent(
+            debouncedSearch
+          )}${currentTagsParam}`
         );
         if (response.ok) {
           const data = await response.json();
@@ -38,7 +52,7 @@ export function SearchInput() {
     };
 
     fetchSuggestions();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, currentFilters]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -61,7 +75,9 @@ export function SearchInput() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (search.trim()) {
-      router.push(`/?tags=${encodeURIComponent(search.trim())}`);
+      const newFilters = [...currentFilters, search.trim()];
+      router.push(`/?tags=${encodeURIComponent(newFilters.join(","))}`);
+      setSearch("");
     } else {
       router.push("/");
     }
@@ -69,13 +85,48 @@ export function SearchInput() {
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setSearch(suggestion);
+    const newFilters = [...currentFilters, suggestion];
+    router.push(`/?tags=${encodeURIComponent(newFilters.join(","))}`);
+    setSearch("");
     setShowSuggestions(false);
-    router.push(`/?tags=${encodeURIComponent(suggestion)}`);
+  };
+
+  const removeFilter = (filterToRemove: string) => {
+    const newFilters = currentFilters.filter(
+      (filter) => filter.toLowerCase() !== filterToRemove.toLowerCase()
+    );
+    if (newFilters.length > 0) {
+      router.push(`/?tags=${encodeURIComponent(newFilters.join(","))}`);
+    } else {
+      router.push("/");
+    }
   };
 
   return (
     <div className="relative w-full max-w-3xl">
+      {currentFilters.length > 0 && (
+        <div className="mb-4 flex flex-wrap gap-2">
+          {currentFilters.map((filter) => (
+            <div
+              key={filter}
+              className="flex items-center gap-1 px-2 py-1 "
+              style={{
+                backgroundColor: "var(--tag-bg)",
+                color: "var(--tag-text)",
+              }}
+            >
+              <span>{filter}</span>
+              <button
+                type="button"
+                onClick={() => removeFilter(filter)}
+                className="ml-1 cursor-pointer"
+              >
+                <XMarkIcon className=" size-4" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <input

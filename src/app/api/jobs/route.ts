@@ -9,8 +9,9 @@ export async function GET(request: Request) {
   let filteredJobs = [...mockJobs];
 
   if (tags.length > 0) {
+    // Filter jobs that match ALL the provided tags (AND logic)
     filteredJobs = mockJobs.filter((job) =>
-      tags.some((tag) =>
+      tags.every((tag) =>
         job.tags.some((jobTag) => jobTag.toLowerCase().includes(tag))
       )
     );
