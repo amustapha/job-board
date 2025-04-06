@@ -1,10 +1,18 @@
+
 import { Hero } from "@/components/Hero";
 import { JobsListing } from "@/components/JobsListing";
 import { Job } from "@/components/JobView";
 import { Suspense } from "react";
 
-async function getJobs(): Promise<Job[]> {
-  const res = await fetch("http://localhost:3000/api/jobs", {
+
+async function getJobs(tags?: string[]): Promise<Job[]> {
+  const url = new URL("http://localhost:3000/api/jobs");
+
+  if (tags && tags.length > 0) {
+    url.searchParams.set("tags", tags.join(","));
+  }
+
+  const res = await fetch(url, {
     cache: "no-store",
   });
 
@@ -15,8 +23,13 @@ async function getJobs(): Promise<Job[]> {
   return res.json();
 }
 
-export default async function Home() {
-  const jobs = await getJobs();
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: { tags?: string };
+}) {
+  const tags = searchParams.tags?.split(",").filter(Boolean);
+  const jobs = await getJobs(tags);
 
   return (
     <div className="min-h-screen">
