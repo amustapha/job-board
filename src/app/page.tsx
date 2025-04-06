@@ -23,7 +23,7 @@ export default async function Home() {
       <Hero />
       <main className="container mx-auto px-4 py-8">
         <Suspense fallback={<JobsListing jobs={[]} isLoading={true} />}>
-          <JobsListing jobs={jobs} isLoading={true} />
+          <JobsListing jobs={jobs} />
         </Suspense>
       </main>
     </div>
