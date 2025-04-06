@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Switch } from "./Switch";
+import { SunIcon, MoonIcon } from "@heroicons/react/24/outline";
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
@@ -29,12 +31,10 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
-      onClick={toggleTheme}
-      className="fixed top-4 right-4 p-2 rounded-lg bg-gray-200 dark:bg-gray-800 transition-colors"
-      aria-label="Toggle theme"
-    >
-      {theme === "light" ? "🌙" : "☀️"}
-    </button>
+    <div className="fixed top-4 right-4 flex items-center gap-2 p-2 rounded-lg  transition-colors">
+      <SunIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+      <Switch checked={theme === "dark"} onChange={toggleTheme} />
+      <MoonIcon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+    </div>
   );
 }
