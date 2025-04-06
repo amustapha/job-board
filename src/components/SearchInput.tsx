@@ -78,9 +78,7 @@ export function SearchInput() {
       const newFilters = [...currentFilters, search.trim()];
       router.push(`/?tags=${encodeURIComponent(newFilters.join(","))}`);
       setSearch("");
-    } else {
-      router.push("/");
-    }
+    } 
     setShowSuggestions(false);
   };
 
