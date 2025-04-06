@@ -75,7 +75,7 @@ export function SearchInput() {
   };
 
   return (
-    <div className="relative w-full max-w-md">
+    <div className="relative w-full max-w-3xl">
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <input
@@ -87,7 +87,7 @@ export function SearchInput() {
               setShowSuggestions(true);
             }}
             onFocus={() => setShowSuggestions(true)}
-            placeholder="Search by skills (e.g., React, Python, AWS)..."
+            placeholder="Filter by skills, role, or company (e.g., React, Python, Ecosia, Web3 Engineer, etc)..."
             className="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-[var(--button-primary-bg)] transition-colors"
             style={{
               backgroundColor: "var(--input-bg)",
