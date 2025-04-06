@@ -156,8 +156,16 @@ export function SearchInput() {
               }}
             >
               {isLoading ? (
-                <div className="text-center text-gray-500 dark:text-gray-400">
-                  Loading...
+                <div className="flex flex-wrap gap-2 p-1">
+                  {["w-32", "w-40", "w-20", "w-24"].map((index) => (
+                    <div
+                      key={index}
+                      className={`h-8 rounded animate-pulse ${index}`}
+                      style={{
+                        backgroundColor: "var(--tag-bg)",
+                      }}
+                    />
+                  ))}
                 </div>
               ) : suggestions.length > 0 ? (
                 <div className="flex flex-wrap gap-2 p-1">
