@@ -18,7 +18,5 @@ export async function GET(request: Request) {
     .filter((tag) => tag.toLowerCase().includes(query))
     .sort((a, b) => a.localeCompare(b));
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   return NextResponse.json(suggestions);
 }
