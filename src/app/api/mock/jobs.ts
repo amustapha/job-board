@@ -2,7 +2,7 @@ import { Job } from "@/components/JobView";
 
 export const mockJobs: Job[] = [
   {
-    companyLogo: "/company-logos/tech-corp.svg",
+    companyLogo: "/company-logos/amazon.svg",
     companyName: "Tech Corp",
     jobTitle: "Senior Frontend Developer",
     tags: ["React", "TypeScript", "Next.js"],
