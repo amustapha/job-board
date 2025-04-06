@@ -3,57 +3,57 @@
 :root {
   /* Base colors */
   --background: #ffffff;
-  --foreground: #2B6CB0;
-  
+  --foreground: #2b6cb0;
+
   /* UI elements */
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
   --input-bg: #ffffff;
   --input-border: #d1d5db;
-  --button-primary-bg: #2B6CB0;
-  --button-primary-hover: #2563eb;
+  --button-primary-bg: #2b6cb0;
+  --button-primary-hover: #3182ce;
   --button-primary-text: #ffffff;
-  
+
   /* Text colors */
   --text-primary: #171717;
   --text-secondary: #4b5563;
   --text-tertiary: #6b7280;
-  
+
   /* Tag colors */
   --tag-bg: #f3f4f6;
   --tag-text: #374151;
-  
+
   /* Gradient colors */
-  --gradient-start: #2B6CB0;
-  --gradient-end: #4299E1;
+  --gradient-start: #2b6cb0;
+  --gradient-end: #4299e1;
 }
 
 /* Dark mode styles */
 :root.dark {
   --background: #0a0a0a;
-  --foreground: #63B3ED;
-  
+  --foreground: #63b3ed;
+
   /* UI elements */
   --card-bg: #171717;
   --card-border: #262626;
   --input-bg: #171717;
   --input-border: #404040;
-  --button-primary-bg: #4299E1;
+  --button-primary-bg: #4299e1;
   --button-primary-hover: #63B3ED;
   --button-primary-text: #ffffff;
-  
+
   /* Text colors */
   --text-primary: #f9fafb;
   --text-secondary: #e5e7eb;
   --text-tertiary: #d1d5db;
-  
+
   /* Tag colors */
   --tag-bg: #262626;
   --tag-text: #e5e7eb;
-  
+
   /* Gradient colors */
-  --gradient-start: #4299E1;
-  --gradient-end: #63B3ED;
+  --gradient-start: #4299e1;
+  --gradient-end: #63b3ed;
 }
 
 @theme inline {
@@ -68,4 +68,14 @@ body {
   background: var(--background);
   color: var(--text-primary);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+.button-primary {
+  @apply w-full py-2 rounded transition-colors hover:cursor-pointer;
+  background-color: var(--button-primary-bg);
+  color: var(--button-primary-text);
+}
+
+.button-primary:hover {
+  background-color: var(--button-primary-hover);
 }
