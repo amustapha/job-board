@@ -1,6 +1,7 @@
 import { Hero } from "@/components/Hero";
 import { JobsListing } from "@/components/JobsListing";
 import { Job } from "@/components/JobView";
+import Link from "next/link";
 import { Suspense } from "react";
 
 async function getJobs(tags?: string[]): Promise<Job[]> {
@@ -42,6 +43,19 @@ export default async function Home({
               Showing results for: {tags.join(", ")}
             </p>
           </div>
+        )}
+
+        {jobs && jobs.length === 0 && (
+          <Link
+            href="/"
+            className="inline-block mt-2 px-4 py-2 text-sm rounded-md transition-colors"
+            style={{
+              backgroundColor: "var(--button-secondary-bg, #f0f0f0)",
+              color: "var(--button-secondary-text, #333)",
+            }}
+          >
+            Clear all filters
+          </Link>
         )}
         <Suspense fallback={<JobsListing jobs={[]} isLoading={true} />}>
           <JobsListing jobs={jobs} />
