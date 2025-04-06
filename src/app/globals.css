@@ -3,14 +3,14 @@
 :root {
   /* Base colors */
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #2B6CB0;
   
   /* UI elements */
   --card-bg: #ffffff;
   --card-border: #e5e7eb;
   --input-bg: #ffffff;
   --input-border: #d1d5db;
-  --button-primary-bg: #3b82f6;
+  --button-primary-bg: #2B6CB0;
   --button-primary-hover: #2563eb;
   --button-primary-text: #ffffff;
   
@@ -24,22 +24,22 @@
   --tag-text: #374151;
   
   /* Gradient colors */
-  --gradient-start: #3b82f6;
-  --gradient-end: #8b5cf6;
+  --gradient-start: #2B6CB0;
+  --gradient-end: #4299E1;
 }
 
 /* Dark mode styles */
 :root.dark {
   --background: #0a0a0a;
-  --foreground: #ededed;
+  --foreground: #63B3ED;
   
   /* UI elements */
   --card-bg: #171717;
   --card-border: #262626;
   --input-bg: #171717;
   --input-border: #404040;
-  --button-primary-bg: #3b82f6;
-  --button-primary-hover: #60a5fa;
+  --button-primary-bg: #4299E1;
+  --button-primary-hover: #63B3ED;
   --button-primary-text: #ffffff;
   
   /* Text colors */
@@ -52,8 +52,8 @@
   --tag-text: #e5e7eb;
   
   /* Gradient colors */
-  --gradient-start: #60a5fa;
-  --gradient-end: #a78bfa;
+  --gradient-start: #4299E1;
+  --gradient-end: #63B3ED;
 }
 
 @theme inline {
