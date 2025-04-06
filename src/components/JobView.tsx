@@ -1,12 +1,15 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Image from "next/image";
 import {
   MapPinIcon,
   BriefcaseIcon,
   CurrencyDollarIcon,
+  BuildingOfficeIcon,
 } from "@heroicons/react/24/outline";
 
-interface JobViewProps {
+export interface Job {
   companyLogo: string;
   companyName: string;
   jobTitle: string;
@@ -14,6 +17,7 @@ interface JobViewProps {
   location?: string;
   jobType?: string;
   salary?: string;
+  url: string;
 }
 
 export function JobView({
@@ -24,7 +28,10 @@ export function JobView({
   location = "Remote",
   jobType,
   salary,
-}: JobViewProps) {
+  url,
+}: Job) {
+  const [imageError, setImageError] = useState(false);
+
   return (
     <div
       className="p-6 rounded-lg border shadow-sm transition-colors"
@@ -35,16 +42,21 @@ export function JobView({
     >
       <div className="flex items-start gap-4 mb-4">
         <div
-          className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0"
+          className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 flex items-center justify-center"
           style={{ backgroundColor: "var(--tag-bg)" }}
         >
-          <Image
-            src={companyLogo}
-            alt={`${companyName} logo`}
-            width={48}
-            height={48}
-            className="object-contain"
-          />
+          {!imageError ? (
+            <Image
+              src={companyLogo}
+              alt={`${companyName} logo`}
+              width={48}
+              height={48}
+              className="object-contain"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <BuildingOfficeIcon className="w-8 h-8 text-gray-500" />
+          )}
         </div>
         <div>
           <h3
@@ -95,7 +107,14 @@ export function JobView({
           </div>
         )}
       </div>
-      <button className="w-full py-2 rounded button-primary">Apply Now</button>
+      <a
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block w-full py-2 rounded button-primary text-center"
+      >
+        Apply Now
+      </a>
     </div>
   );
 }
