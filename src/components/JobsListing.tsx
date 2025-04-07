@@ -1,4 +1,5 @@
-import { JobView, Job } from "@/components/JobView";
+import { JobView } from "@/components/JobView";
+import { Job } from "@/types/job";
 
 interface JobsListingProps {
   jobs: Job[];

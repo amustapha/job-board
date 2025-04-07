@@ -1,6 +1,6 @@
 import { Hero } from "@/components/Hero";
 import { JobsListing } from "@/components/JobsListing";
-import { Job } from "@/components/JobView";
+import { Job } from "@/types/job";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -25,9 +25,13 @@ async function getJobs(tags?: string[]): Promise<Job[]> {
 export default async function Home({
   searchParams,
 }: {
-  searchParams: { tags?: string };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  const tags = searchParams.tags?.split(",").filter(Boolean);
+  const resolvedParams = await searchParams;
+  const tags =
+    typeof resolvedParams.tags === "string"
+      ? resolvedParams.tags.split(",").filter(Boolean)
+      : [];
   const jobs = await getJobs(tags);
 
   return (
