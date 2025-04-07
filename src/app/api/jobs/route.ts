@@ -12,7 +12,7 @@ export async function GET(request: Request) {
     // Filter jobs that match ALL the provided tags (AND logic)
     filteredJobs = mockJobs.filter((job) =>
       tags.every((tag) =>
-        job.tags.some((jobTag) => jobTag.toLowerCase().includes(tag))
+        job.tags.some((jobTag: string) => jobTag.toLowerCase().includes(tag))
       )
     );
   }
