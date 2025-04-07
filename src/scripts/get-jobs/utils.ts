@@ -1,5 +1,13 @@
-import { PageMap, GoogleJobItem, GoogleSearchResponse } from "./types";
-import { HTTPS_PREFIX, APPLY_SUFFIX, TECHNOLOGY_TAGS } from "./constants";
+import {
+  PageMap,
+  GoogleJobItem,
+  GoogleSearchResponse,
+} from "./types";
+import {
+  HTTPS_PREFIX,
+  APPLY_SUFFIX,
+  TECHNOLOGY_TAGS,
+} from "./constants";
 import { Job } from "@/types/job";
 
 /**

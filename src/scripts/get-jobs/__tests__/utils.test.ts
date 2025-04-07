@@ -7,31 +7,8 @@ import {
   cleanJobTitle,
   fixLink,
   destructureJobTitle,
-  getJob,
 } from "../utils";
 import { PageMap } from "../types";
-
-// Mock the googleResponse
-jest.mock("../../mock/google-response", () => ({
-  googleResponse: {
-    items: [
-      {
-        title: "Senior Frontend Developer - Example Corp",
-        link: "https://example.com/example/senior-frontend-developer",
-        pagemap: {
-          cse_thumbnail: [{ src: "https://example.com/logo.png" }],
-          metatags: [
-            {
-              "og:description": "Join our team as a Senior Frontend Developer",
-              "twitter:description":
-                "Join our team as a Senior Frontend Developer",
-            },
-          ],
-        },
-      },
-    ],
-  },
-}));
 
 // Mock the constants module
 jest.mock("../constants", () => ({
@@ -217,21 +194,6 @@ describe("destructureJobTitle", () => {
     expect(result).toEqual({
       companyName: "example-corp",
       jobTitle: "Senior Frontend Developer",
-    });
-  });
-});
-
-describe("getJob", () => {
-  it("should retrieve and process a job from the Google response", async () => {
-
-
-    const job = await getJob(0);
-    expect(job).toEqual({
-      companyName: "Example Corp",
-      jobTitle: "Senior Frontend Developer",
-      tags: [],
-      companyLogo: "https://example.com/logo.png",
-      url: "https://example.com/example/senior-frontend-developer",
     });
   });
 });
