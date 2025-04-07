@@ -1,6 +1,6 @@
 import { PageMap, GoogleJobItem } from "./types";
 import { HTTPS_PREFIX, APPLY_SUFFIX, TECHNOLOGY_TAGS } from "./constants";
-import { Job } from "@/components/JobView";
+import { Job } from "@/types/job";
 import { googleResponse } from "../mock/google-response";
 
 /**

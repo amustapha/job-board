@@ -8,17 +8,7 @@ import {
   CurrencyDollarIcon,
   BuildingOfficeIcon,
 } from "@heroicons/react/24/outline";
-
-export interface Job {
-  companyLogo: string;
-  companyName: string;
-  jobTitle: string;
-  tags: string[];
-  location?: string;
-  jobType?: string;
-  salary?: string;
-  url: string;
-}
+import { Job } from "@/types/job";
 
 export function JobView({
   companyLogo,
@@ -107,6 +97,7 @@ export function JobView({
           </div>
         )}
       </div>
+
       <a
         href={url}
         target="_blank"
