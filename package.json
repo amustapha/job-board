@@ -5,10 +5,11 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
-    "scripts:build": "tsc --project src/scripts/tsconfig.json",
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
+    "scripts:build": "tsc --project src/scripts/tsconfig.json",
+    "scripts:run": "npx ts-node --project src/scripts/tsconfig.json src/scripts/index.ts",
     "test:watch": "jest --watch"
   },
   "dependencies": {
