@@ -1,7 +1,6 @@
 import { PageMap, GoogleJobItem } from "./types";
 import { HTTPS_PREFIX, APPLY_SUFFIX, TECHNOLOGY_TAGS } from "./constants";
 import { Job } from "@/types/job";
-import { googleResponse } from "../mock/google-response";
 
 /**
  * Extracts the slug name from a URL
@@ -134,15 +133,14 @@ export function destructureJobTitle(title: string, slugName: string) {
 
 /**
  * Retrieves and processes a job from the Google response
- * 
+ *
  * in future, this function will also crawl the job posting website to get the full job description
- * 
- * @param index - The index of the job in the Google response
+ *
+ * @param jobItem - The job item from the Google response
  * @returns Processed job data
  */
-export async function getJob(index: number): Promise<Job> {
-  const job = googleResponse.items[+index];
-  const { title, link, pagemap } = job as GoogleJobItem;
+export async function getJob(jobItem: GoogleJobItem): Promise<Job> {
+  const { title, link, pagemap } = jobItem;
   const slugName = extractSlugName(link);
 
   const imageLink = extractImageLink(pagemap);

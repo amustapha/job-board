@@ -6,6 +6,7 @@ import {
 } from "./constants";
 import { getJob, fetchGoogleSearchResults } from "./utils";
 import { Job } from "@/types/job";
+import { GoogleJobItem } from "./types";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CX = process.env.GOOGLE_CX; // Custom Search Engine ID
@@ -29,18 +30,17 @@ export async function GET() {
       searchQuery,
       REQUIRED_KEYWORDS,
       EXCLUDED_KEYWORDS,
+      21
     );
-
-    return NextResponse.json({ data });
 
     // Process each job item using getJob
     const processedJobs: Job[] = [];
-    for (let i = 0; i < data.items.length; i++) {
+    for (const item of data.items) {
       try {
-        const job = await getJob(i);
+        const job = await getJob(item as GoogleJobItem);
         processedJobs.push(job);
       } catch (error) {
-        console.error(`Error processing job at index ${i}:`, error);
+        console.error(`Error processing job:`, error);
       }
     }
 
