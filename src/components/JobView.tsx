@@ -62,9 +62,9 @@ export function JobView({
       </div>
 
       <div className="flex flex-wrap gap-2 mb-4">
-        {tags.map((tag) => (
+        {tags.map((tag, index) => (
           <span
-            key={tag}
+            key={index}
             className="text-xs px-2 py-1 rounded transition-colors"
             style={{
               backgroundColor: "var(--tag-bg)",
