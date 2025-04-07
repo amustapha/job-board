@@ -12,13 +12,16 @@ export const TECHNICAL_ROLES = [
   ["product designer"],
 
   // Data/AI
-  [
-    "machine learning engineer",
-    "data engineer",
-  ],
+  ["machine learning engineer", "data engineer"],
 
   // Cloud/Infra
-  ["cloud architect", "security engineer", "sre engineer", "qa engineer", "devops engineer"],
+  [
+    "cloud architect",
+    "security engineer",
+    "sre engineer",
+    "qa engineer",
+    "devops engineer",
+  ],
 
   // Emerging Tech
   ["blockchain developer", "web3 developer", "solidity developer"],
@@ -41,4 +44,43 @@ export const EXCLUDED_KEYWORDS = [
   "in-person",
   "in-office",
   "Open Positions",
+];
+
+export const TECHNOLOGY_TAGS = [
+  "react",
+  "nodejs",
+  "postgresql",
+  "typescript",
+  "javascript",
+  "python",
+  "java",
+  "kotlin",
+  "stripe",
+  "react native",
+  "vue",
+  "frontend",
+  "backend",
+  "full stack",
+  "devops",
+  "cloud",
+  "infrastructure",
+  "Kubernetes",
+  "docker",
+  "aws",
+  "azure",
+  "gcp",
+  "ai",
+  "scrum",
+  "agile",
+  "devops",
+  "cloud",
+  "infrastructure",
+  " data science",
+  "ML",
+  "web3",
+  "blockchain",
+  "solidity",
+  "ethereum",
+  "bitcoin",
+  "crypto",
 ];
