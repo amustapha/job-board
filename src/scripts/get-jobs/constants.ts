@@ -85,8 +85,7 @@ export const TECHNOLOGY_TAGS = [
   "crypto",
 ];
 
-
 export const DEFAULT_INDEX = "0";
 
 export const HTTPS_PREFIX = "https://";
-export const APPLY_SUFFIX = "/apply";
+export const DISCARDED_LINK_SUFFIX = /\/apply(\?.*)?$/;

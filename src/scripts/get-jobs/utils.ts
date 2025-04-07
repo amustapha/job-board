@@ -1,11 +1,7 @@
-import {
-  PageMap,
-  GoogleJobItem,
-  GoogleSearchResponse,
-} from "./types";
+import { PageMap, GoogleJobItem, GoogleSearchResponse } from "./types";
 import {
   HTTPS_PREFIX,
-  APPLY_SUFFIX,
+  DISCARDED_LINK_SUFFIX,
   TECHNOLOGY_TAGS,
 } from "./constants";
 import { Job } from "@/types/job";
@@ -99,10 +95,7 @@ export function cleanJobTitle(title: string, companyName: string): string {
  * @returns The fixed URL
  */
 export function fixLink(link: string): string {
-  if (link.endsWith(APPLY_SUFFIX)) {
-    return link.replace(APPLY_SUFFIX, "");
-  }
-  return link;
+  return link.replace(DISCARDED_LINK_SUFFIX, "");
 }
 
 /**
@@ -215,6 +208,7 @@ export async function fetchGoogleSearchResults(
   url.searchParams.append("q", searchQuery);
   url.searchParams.append("sort", "date");
   url.searchParams.append("dateRestrict", dateRestrict);
+  url.searchParams.append("lr", "lang_en");
   url.searchParams.append("num", numResults.toString());
   url.searchParams.append("start", start.toString());
 
