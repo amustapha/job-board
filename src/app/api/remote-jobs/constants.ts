@@ -84,3 +84,9 @@ export const TECHNOLOGY_TAGS = [
   "bitcoin",
   "crypto",
 ];
+
+
+export const DEFAULT_INDEX = "0";
+
+export const HTTPS_PREFIX = "https://";
+export const APPLY_SUFFIX = "/apply";
