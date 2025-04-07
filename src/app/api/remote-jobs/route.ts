@@ -4,7 +4,7 @@ import {
   REQUIRED_KEYWORDS,
   TECHNICAL_ROLES,
 } from "./constants";
-import { getJob } from "./utils";
+import { getJob, fetchGoogleSearchResults } from "./utils";
 import { Job } from "@/types/job";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
@@ -18,33 +18,20 @@ export async function GET() {
     );
   }
 
-  // Construct the search query
-  const exactTerms = REQUIRED_KEYWORDS.map((k) => `"${k}"`).join(" OR ");
-  const searchQuery = TECHNICAL_ROLES[0]
-    .map((role) => `"${role}"`)
-    .join(" OR ");
-  const excludedTerms = EXCLUDED_KEYWORDS.map((term) => `"${term}"`).join(
-    " OR "
-  );
-  const dateRestrict = "d7"; // Last week
-
   try {
-    const url = new URL("https://www.googleapis.com/customsearch/v1");
-    url.searchParams.append("key", GOOGLE_API_KEY);
-    url.searchParams.append("cx", GOOGLE_CX);
-    url.searchParams.append("exactTerms", exactTerms);
-    url.searchParams.append("excludeTerms", excludedTerms);
-    url.searchParams.append("q", searchQuery);
-    url.searchParams.append("sort", "date");
-    url.searchParams.append("dateRestrict", dateRestrict);
-    url.searchParams.append("num", "10"); // Number of results
+    // Construct the search query
+    const searchQuery = TECHNICAL_ROLES[0]
+      .map((role) => `"${role}"`)
+      .join(" OR ");
 
-    const response = await fetch(url.toString());
-    const data = await response.json();
+    // Fetch search results using the utility function
+    const data = await fetchGoogleSearchResults(
+      searchQuery,
+      REQUIRED_KEYWORDS,
+      EXCLUDED_KEYWORDS,
+    );
 
-    if (!response.ok) {
-      throw new Error(data.error?.message || "Failed to fetch search results");
-    }
+    return NextResponse.json({ data });
 
     // Process each job item using getJob
     const processedJobs: Job[] = [];
