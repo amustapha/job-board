@@ -4,11 +4,13 @@ import {
   REQUIRED_KEYWORDS,
   TECHNICAL_ROLES,
 } from "./constants";
+import { getJob } from "./utils";
+import { Job } from "@/types/job";
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CX = process.env.GOOGLE_CX; // Custom Search Engine ID
 
-export async function GET(request: Request) {
+export async function GET() {
   if (!GOOGLE_API_KEY || !GOOGLE_CX) {
     return NextResponse.json(
       { error: "Google API configuration is missing" },
@@ -16,7 +18,6 @@ export async function GET(request: Request) {
     );
   }
 
-  //("software engineer" | "software developer")
   // Construct the search query
   const exactTerms = REQUIRED_KEYWORDS.map((k) => `"${k}"`).join(" OR ");
   const searchQuery = TECHNICAL_ROLES[0]
@@ -31,7 +32,7 @@ export async function GET(request: Request) {
     const url = new URL("https://www.googleapis.com/customsearch/v1");
     url.searchParams.append("key", GOOGLE_API_KEY);
     url.searchParams.append("cx", GOOGLE_CX);
-    // url.searchParams.append("exactTerms", exactTerms);
+    url.searchParams.append("exactTerms", exactTerms);
     url.searchParams.append("excludeTerms", excludedTerms);
     url.searchParams.append("q", searchQuery);
     url.searchParams.append("sort", "date");
@@ -45,7 +46,18 @@ export async function GET(request: Request) {
       throw new Error(data.error?.message || "Failed to fetch search results");
     }
 
-    return NextResponse.json(data);
+    // Process each job item using getJob
+    const processedJobs: Job[] = [];
+    for (let i = 0; i < data.items.length; i++) {
+      try {
+        const job = await getJob(i);
+        processedJobs.push(job);
+      } catch (error) {
+        console.error(`Error processing job at index ${i}:`, error);
+      }
+    }
+
+    return NextResponse.json({ jobs: processedJobs });
   } catch (error) {
     console.error("Error fetching remote jobs:", error);
     return NextResponse.json(

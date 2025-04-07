@@ -134,6 +134,9 @@ export function destructureJobTitle(title: string, slugName: string) {
 
 /**
  * Retrieves and processes a job from the Google response
+ * 
+ * in future, this function will also crawl the job posting website to get the full job description
+ * 
  * @param index - The index of the job in the Google response
  * @returns Processed job data
  */
