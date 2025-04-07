@@ -25,12 +25,15 @@ export async function GET() {
       .map((role) => `"${role}"`)
       .join(" OR ");
 
-    // Fetch search results using the utility function
+    // Fetch search results using the utility function with pagination
+    // This will automatically fetch up to 100 results
     const data = await fetchGoogleSearchResults(
       searchQuery,
       REQUIRED_KEYWORDS,
       EXCLUDED_KEYWORDS,
-      21
+      1, // Start from the first page
+      "w2", // Last 2 weeks
+      100 // Maximum 100 results total
     );
 
     // Process each job item using getJob

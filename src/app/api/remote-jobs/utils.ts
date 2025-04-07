@@ -1,4 +1,4 @@
-import { PageMap, GoogleJobItem } from "./types";
+import { PageMap, GoogleJobItem, GoogleSearchResponse } from "./types";
 import { HTTPS_PREFIX, APPLY_SUFFIX, TECHNOLOGY_TAGS } from "./constants";
 import { Job } from "@/types/job";
 
@@ -159,24 +159,26 @@ export async function getJob(jobItem: GoogleJobItem): Promise<Job> {
 }
 
 /**
- * Fetches job search results from Google Custom Search API
- * @param exactTerms - Required keywords for the search
+ * Fetches job search results from Google Custom Search API with pagination
  * @param searchQuery - Main search query
+ * @param exactTerms - Required keywords for the search
  * @param excludedTerms - Terms to exclude from search
+ * @param start - Starting index for pagination
  * @param dateRestrict - Time restriction for results (e.g., 'd7' for last week)
- * @param numResults - Number of results to return
+ * @param maxResults - Maximum total results to fetch (default: 100)
  * @returns The search results from Google API
  */
 export async function fetchGoogleSearchResults(
   searchQuery: string,
   exactTerms: string[] = [],
   excludedTerms: string[] = [],
-  start?: number,
+  start: number = 1,
   dateRestrict: string = "w2",
-  numResults: number = 10
-) {
+  maxResults: number = 100
+): Promise<GoogleSearchResponse> {
   const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
   const GOOGLE_CX = process.env.GOOGLE_CX;
+  const numResults = 10; // Fixed number of results per page
 
   if (!GOOGLE_API_KEY || !GOOGLE_CX) {
     throw new Error("Google API configuration is missing");
@@ -185,34 +187,79 @@ export async function fetchGoogleSearchResults(
   const url = new URL("https://www.googleapis.com/customsearch/v1");
   url.searchParams.append("key", GOOGLE_API_KEY);
   url.searchParams.append("cx", GOOGLE_CX);
-  
+
   // Only append exactTerms if the array is not empty
   if (exactTerms.length > 0) {
-    const formattedExactTerms = exactTerms.map(term => `"${term}"`).join(" OR ");
+    const formattedExactTerms = exactTerms
+      .map((term) => `"${term}"`)
+      .join(" OR ");
     url.searchParams.append("exactTerms", formattedExactTerms);
   }
-  
+
   // Only append excludedTerms if the array is not empty
   if (excludedTerms.length > 0) {
-    const formattedExcludedTerms = excludedTerms.map(term => `"${term}"`).join(" OR ");
+    const formattedExcludedTerms = excludedTerms
+      .map((term) => `"${term}"`)
+      .join(" OR ");
     url.searchParams.append("excludeTerms", formattedExcludedTerms);
   }
 
-  if (start) {
-    url.searchParams.append("start", start.toString());
-  }
-  
   url.searchParams.append("q", searchQuery);
   url.searchParams.append("sort", "date");
   url.searchParams.append("dateRestrict", dateRestrict);
   url.searchParams.append("num", numResults.toString());
+  url.searchParams.append("start", start.toString());
 
   const response = await fetch(url.toString());
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data.error?.message || "Failed to fetch search results");
+    // Handle error response from Google API
+    const errorData = data as { error?: { message?: string } };
+    throw new Error(
+      errorData.error?.message || "Failed to fetch search results"
+    );
   }
 
-  return data;
+  const searchData = data as GoogleSearchResponse;
+
+  // Check if there are more results and we haven't reached the max limit
+  const currentResults = searchData.items || [];
+  const totalResults = Math.min(
+    parseInt(searchData.searchInformation?.totalResults || "0"),
+    maxResults
+  );
+
+  // Check if there's a next page and we haven't reached the max limit
+  const hasNextPage =
+    searchData.queries?.nextPage && searchData.queries.nextPage.length > 0;
+  const nextStartIndex =
+    hasNextPage && searchData.queries.nextPage
+      ? searchData.queries.nextPage[0].startIndex
+      : null;
+
+  // If there's a next page and we haven't reached the max limit, fetch the next page
+  if (
+    hasNextPage &&
+    nextStartIndex &&
+    nextStartIndex <= totalResults &&
+    currentResults.length > 0
+  ) {
+    const nextPageData = await fetchGoogleSearchResults(
+      searchQuery,
+      exactTerms,
+      excludedTerms,
+      nextStartIndex,
+      dateRestrict,
+      maxResults
+    );
+
+    // Combine the results
+    return {
+      ...searchData,
+      items: [...currentResults, ...(nextPageData.items || [])],
+    };
+  }
+
+  return searchData;
 }
