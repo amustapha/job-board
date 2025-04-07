@@ -5,6 +5,10 @@ import {
   TECHNOLOGY_TAGS,
 } from "./constants";
 import { Job } from "@/types/job";
+import fs from "fs";
+import path from "path";
+import https from "https";
+import http from "http";
 
 /**
  * Extracts the slug name from a URL
@@ -140,6 +144,92 @@ export function destructureJobTitle(title: string, slugName: string) {
 }
 
 /**
+ * Downloads an image from a URL and saves it to the public directory
+ * @param imageUrl - The URL of the image to download
+ * @param companyName - The company name to use for the filename
+ * @returns The path to the saved image relative to the public directory
+ */
+export async function downloadAndSaveImage(
+  imageUrl: string,
+  companyName: string
+): Promise<string> {
+  if (!imageUrl) {
+    return "/company-logos/default.svg";
+  }
+
+  try {
+    // Create a sanitized filename from the company name
+    const sanitizedCompanyName = companyName
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+
+    // Determine the file extension from the URL
+    const urlParts = imageUrl.split(".");
+    const extension =
+      urlParts.length > 1
+        ? urlParts[urlParts.length - 1].toLowerCase().split("?")[0]
+        : "jpg";
+
+    // Validate extension
+    const validExtensions = ["jpg", "jpeg", "png", "gif", "svg", "webp"];
+    const fileExtension = validExtensions.includes(extension)
+      ? extension
+      : "jpg";
+
+    // Create the filename
+    const filename = `${sanitizedCompanyName}.${fileExtension}`;
+    const publicDir = path.join(process.cwd(), "public", "company-logos");
+    const filePath = path.join(publicDir, filename);
+
+    // Create the directory if it doesn't exist
+    if (!fs.existsSync(publicDir)) {
+      fs.mkdirSync(publicDir, { recursive: true });
+    }
+
+    // Check if the file already exists
+    if (fs.existsSync(filePath)) {
+      return `/company-logos/${filename}`;
+    }
+
+    // Download the image
+    return new Promise((resolve, reject) => {
+      const protocol = imageUrl.startsWith("https") ? https : http;
+
+      protocol
+        .get(imageUrl, (response) => {
+          if (response.statusCode !== 200) {
+            reject(
+              new Error(`Failed to download image: ${response.statusCode}`)
+            );
+            return;
+          }
+
+          const fileStream = fs.createWriteStream(filePath);
+          response.pipe(fileStream);
+
+          fileStream.on("finish", () => {
+            fileStream.close();
+            resolve(`/company-logos/${filename}`);
+          });
+
+          fileStream.on("error", (err) => {
+            fs.unlink(filePath, () => {}); // Delete the file if there was an error
+            reject(err);
+          });
+        })
+        .on("error", (err) => {
+          reject(err);
+        });
+    });
+  } catch (error) {
+    console.error(`Error downloading image for ${companyName}:`, error);
+    return "/company-logos/default.svg";
+  }
+}
+
+/**
  * Retrieves and processes a job from the Google response
  *
  * in future, this function will also crawl the job posting website to get the full job description
@@ -159,14 +249,44 @@ export async function getJob(jobItem: GoogleJobItem): Promise<Job> {
 
   const { companyName, jobTitle } = destructureJobTitle(title, slugName);
 
+  // Download and save the company logo
+  const localImagePath = await downloadAndSaveImage(imageLink, companyName);
+  
+
   return {
     id,
     companyName,
     jobTitle,
     tags,
-    companyLogo: imageLink,
+    companyLogo: localImagePath,
     url: fixedLink,
   };
+}
+
+/**
+ * Retrieves and processes jobs from the Google response
+ *
+ * @param response - The Google search response
+ * @returns Array of processed jobs
+ */
+export async function getJobs(response: GoogleSearchResponse): Promise<Job[]> {
+  const { items } = response;
+  if (!items) {
+    return [];
+  }
+
+  const jobs: Job[] = [];
+
+  for (const item of items) {
+    try {
+      const job = await getJob(item);
+      jobs.push(job);
+    } catch (error) {
+      console.error("Error processing job:", error);
+    }
+  }
+
+  return jobs;
 }
 
 /**
