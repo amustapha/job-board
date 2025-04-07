@@ -82,7 +82,7 @@ export function cleanJobTitle(title: string, companyName: string): string {
     .trim()
     .replace(/^\s*-\s*/, "")
     .replace(/-$/, "")
-    .replace(/^\s*at\s*/, "")
+    .replace(/\sat$/, "")
     .trim();
 }
 
