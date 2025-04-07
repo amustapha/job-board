@@ -62,6 +62,7 @@ export function JobsListing({ jobs, isLoading = false }: JobsListingProps) {
       {jobs.map((job, index) => (
         <JobView
           key={index}
+          id={job.id}
           companyLogo={job.companyLogo}
           companyName={job.companyName}
           jobTitle={job.jobTitle}
