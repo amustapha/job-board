@@ -2,6 +2,7 @@ import { Job } from "@/types/job";
 
 export const mockJobs: Job[] = [
   {
+    id: "1",
     companyLogo: "/company-logos/amazon.svg",
     companyName: "Tech Corp",
     jobTitle: "Senior Frontend Developer",
@@ -12,6 +13,7 @@ export const mockJobs: Job[] = [
     url: "https://techcorp.com/jobs/senior-frontend",
   },
   {
+    id: "2",
     companyLogo: "/company-logos/startupx.svg",
     companyName: "StartupX",
     jobTitle: "Backend Engineer",
@@ -22,6 +24,7 @@ export const mockJobs: Job[] = [
     url: "https://startupx.com/jobs/backend",
   },
   {
+    id: "3",
     companyLogo: "/company-logos/innovation-labs.svg",
     companyName: "Innovation Labs",
     jobTitle: "Full Stack Developer",
@@ -32,6 +35,7 @@ export const mockJobs: Job[] = [
     url: "https://innovationlabs.com/jobs/fullstack",
   },
   {
+    id: "4",
     companyLogo: "/company-logos/dataflow.svg",
     companyName: "DataFlow Analytics",
     jobTitle: "Data Scientist",
@@ -42,6 +46,7 @@ export const mockJobs: Job[] = [
     url: "https://dataflow.com/jobs/data-scientist",
   },
   {
+    id: "5",
     companyLogo: "/company-logos/cloudtech.svg",
     companyName: "CloudTech Solutions",
     jobTitle: "DevOps Engineer",
@@ -52,6 +57,7 @@ export const mockJobs: Job[] = [
     url: "https://cloudtech.com/jobs/devops",
   },
   {
+    id: "6",
     companyLogo: "/company-logos/designstudio.svg",
     companyName: "Design Studio",
     jobTitle: "UI/UX Designer",
@@ -62,6 +68,7 @@ export const mockJobs: Job[] = [
     url: "https://designstudio.com/jobs/uiux",
   },
   {
+    id: "7",
     companyLogo: "/company-logos/securityplus.svg",
     companyName: "SecurityPlus",
     jobTitle: "Security Engineer",
@@ -72,6 +79,7 @@ export const mockJobs: Job[] = [
     url: "https://securityplus.com/jobs/security-engineer",
   },
   {
+    id: "8",
     companyLogo: "/company-logos/mobileapps.svg",
     companyName: "MobileApps Inc",
     jobTitle: "Mobile Developer",
@@ -82,6 +90,7 @@ export const mockJobs: Job[] = [
     url: "https://mobileapps.com/jobs/mobile-dev",
   },
   {
+    id: "9",
     companyLogo: "/company-logos/aiworks.svg",
     companyName: "AIWorks",
     jobTitle: "AI Research Engineer",
@@ -92,6 +101,7 @@ export const mockJobs: Job[] = [
     url: "https://aiworks.com/jobs/ai-research",
   },
   {
+    id: "10",
     companyLogo: "/company-logos/blockchain.svg",
     companyName: "Blockchain Solutions",
     jobTitle: "Blockchain Developer",
@@ -102,6 +112,7 @@ export const mockJobs: Job[] = [
     url: "https://blockchain.com/jobs/developer",
   },
   {
+    id: "11",
     companyLogo: "/company-logos/gameworks.svg",
     companyName: "GameWorks",
     jobTitle: "Game Developer",
@@ -112,6 +123,7 @@ export const mockJobs: Job[] = [
     url: "https://gameworks.com/jobs/game-dev",
   },
   {
+    id: "12",
     companyLogo: "/company-logos/edtech.svg",
     companyName: "EduTech",
     jobTitle: "EdTech Product Manager",
@@ -122,6 +134,7 @@ export const mockJobs: Job[] = [
     url: "https://edtech.com/jobs/product-manager",
   },
   {
+    id: "13",
     companyLogo: "/company-logos/healthtech.svg",
     companyName: "HealthTech Solutions",
     jobTitle: "Healthcare Software Engineer",
@@ -132,6 +145,7 @@ export const mockJobs: Job[] = [
     url: "https://healthtech.com/jobs/software-engineer",
   },
   {
+    id: "14",
     companyLogo: "/company-logos/google.svg",
     companyName: "Google",
     jobTitle: "Senior Software Engineer",
@@ -142,6 +156,7 @@ export const mockJobs: Job[] = [
     url: "https://careers.google.com/jobs/senior-software-engineer",
   },
   {
+    id: "15",
     companyLogo: "/company-logos/microsoft.svg",
     companyName: "Microsoft",
     jobTitle: "Cloud Solutions Architect",
@@ -152,6 +167,7 @@ export const mockJobs: Job[] = [
     url: "https://careers.microsoft.com/jobs/cloud-solutions-architect",
   },
   {
+    id: "16",
     companyLogo: "/company-logos/apple.svg",
     companyName: "Apple",
     jobTitle: "iOS Developer",
@@ -162,6 +178,7 @@ export const mockJobs: Job[] = [
     url: "https://jobs.apple.com/jobs/ios-developer",
   },
   {
+    id: "17",
     companyLogo: "/company-logos/facebook.svg",
     companyName: "Meta",
     jobTitle: "AR/VR Developer",
@@ -172,6 +189,7 @@ export const mockJobs: Job[] = [
     url: "https://careers.meta.com/jobs/ar-vr-developer",
   },
   {
+    id: "18",
     companyLogo: "/company-logos/netflix.svg",
     companyName: "Netflix",
     jobTitle: "Content Recommendation Engineer",
