@@ -48,6 +48,16 @@ const statements = {
   getLastUpdated: db.prepare("SELECT MAX(updatedAt) as lastUpdated FROM jobs"),
   getById: db.prepare("SELECT * FROM jobs WHERE id = ?"),
   deleteById: db.prepare("DELETE FROM jobs WHERE id = ?"),
+  getByTags: db.prepare(`
+    SELECT * FROM jobs 
+    WHERE json_array_length(json_extract(tags, '$')) > 0
+    AND (
+      SELECT COUNT(*) 
+      FROM json_each(tags) tag 
+      WHERE LOWER(tag.value) LIKE LOWER(?)
+    ) = ?
+    ORDER BY createdAt DESC
+  `),
 };
 
 // Helper functions for job operations
@@ -113,6 +123,28 @@ export const dbOperations = {
   getLastUpdated: () => {
     const result = statements.getLastUpdated.get() as LastUpdatedResult;
     return result?.lastUpdated || new Date().toISOString();
+  },
+
+  // Get jobs by tags
+  getJobsByTags: (tags: string[]) => {
+    if (tags.length === 0) {
+      return dbOperations.getAllJobs();
+    }
+
+    // For each tag, we need to ensure it exists in the job's tags array
+    const jobs = tags.reduce((acc, tag) => {
+      const matchingJobs = statements.getByTags.all(`%${tag}%`, 1) as DbJob[];
+      return acc.length === 0
+        ? matchingJobs
+        : acc.filter((job) =>
+            matchingJobs.some((matchingJob) => matchingJob.id === job.id)
+          );
+    }, [] as DbJob[]);
+
+    return jobs.map((job) => ({
+      ...job,
+      tags: JSON.parse(job.tags),
+    }));
   },
 };
 
