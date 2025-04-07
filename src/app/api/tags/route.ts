@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { mockJobs } from "../mock/jobs";
+import { TECHNICAL_ROLES, TECHNOLOGY_TAGS } from "@/scripts/get-jobs/constants";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -8,7 +8,13 @@ export async function GET(request: Request) {
     searchParams.get("currentTags")?.split(",").filter(Boolean) || [];
 
   // Get all unique tags from jobs
-  const allTags = Array.from(new Set(mockJobs.flatMap((job) => job.tags)));
+  const allTags = Array.from(
+    new Set(
+      [...TECHNOLOGY_TAGS, ...Object.keys(TECHNICAL_ROLES)].map((tag) =>
+        tag.toLowerCase()
+      )
+    )
+  );
 
   // Filter out tags that are already selected
   const availableTags = allTags.filter((tag) => !currentTags.includes(tag));
