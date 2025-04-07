@@ -1,6 +1,6 @@
-export const TECHNICAL_ROLES = [
+export const TECHNICAL_ROLES = {
   // Software Engineering
-  [
+  "Software Engineer": [
     "software engineer",
     "software developer",
     "frontend engineer",
@@ -9,13 +9,13 @@ export const TECHNICAL_ROLES = [
   ],
 
   // Product/Design
-  ["product designer"],
+  "Product design": ["product designer"],
 
   // Data/AI
-  ["machine learning engineer", "data engineer"],
+  "ML Engineer": ["machine learning engineer", "data engineer"],
 
   // Cloud/Infra
-  [
+  "Devops Engineer": [
     "cloud architect",
     "security engineer",
     "sre engineer",
@@ -24,17 +24,29 @@ export const TECHNICAL_ROLES = [
   ],
 
   // Emerging Tech
-  ["blockchain developer", "web3 developer", "solidity developer"],
+  "Blockchain Developer": [
+    "blockchain developer",
+    "web3 developer",
+    "solidity developer",
+  ],
 
   // Leadership
-  ["engineering manager", "technical product manager", "technical lead"],
+  "Engineering Manager": [
+    "engineering manager",
+    "technical product manager",
+    "technical lead",
+  ],
 
   // Product management
-  ["product manager", "product owner", "product analyst"],
+  "Product Manager": ["product manager", "product owner", "product analyst"],
 
   // Social media
-  ["social media manager", "social media coordinator", "social media analyst"],
-];
+  "Social Media Manager": [
+    "social media manager",
+    "social media coordinator",
+    "social media analyst",
+  ],
+};
 
 export const REQUIRED_KEYWORDS = ["remote", "global", "worldwide"];
 

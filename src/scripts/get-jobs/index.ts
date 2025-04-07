@@ -17,8 +17,11 @@ export async function* getJobs() {
     console.error("Google API configuration is missing");
     return;
   }
-  for (const roles of TECHNICAL_ROLES) {
+
+  // Iterate through each role category
+  for (const [roleTag, roles] of Object.entries(TECHNICAL_ROLES)) {
     try {
+      console.log(`Searching for ${roleTag} roles...`);
       const searchQuery = roles.map((role) => `"${role}"`).join(" OR ");
 
       // Fetch search results using the utility function with pagination
@@ -29,19 +32,24 @@ export async function* getJobs() {
         EXCLUDED_KEYWORDS,
         1, // Start from the first page
         "w2", // Last 2 weeks
-        50 // Maximum 100 results total
+        50 // Maximum 50 results total
       );
 
       for (const item of data.items) {
         try {
           const job = await getJob(item as GoogleJobItem);
-          yield job;
+          // Add the role category to the job
+
+          yield {
+            ...job,
+            tags: [...job.tags, roleTag],
+          };
         } catch (error) {
           console.error(`Error processing job:`, error);
         }
       }
     } catch (error) {
-      console.error("Error fetching remote jobs:", error);
+      console.error(`Error fetching ${roleTag} jobs:`, error);
     }
   }
 }
