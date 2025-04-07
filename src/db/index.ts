@@ -44,6 +44,12 @@ const statements = {
     VALUES (@id, @companyName, @jobTitle, @tags, @companyLogo, @url)
   `),
   getAll: db.prepare("SELECT * FROM jobs ORDER BY createdAt DESC"),
+  getAllPaginated: db.prepare(`
+    SELECT * FROM jobs 
+    ORDER BY createdAt DESC
+    LIMIT ? OFFSET ?
+  `),
+  getCount: db.prepare("SELECT COUNT(*) as count FROM jobs"),
   clear: db.prepare("DELETE FROM jobs"),
   getLastUpdated: db.prepare("SELECT MAX(updatedAt) as lastUpdated FROM jobs"),
   getById: db.prepare("SELECT * FROM jobs WHERE id = ?"),
@@ -57,6 +63,28 @@ const statements = {
       WHERE LOWER(tag.value) LIKE LOWER(?)
     ) = ?
     ORDER BY createdAt DESC
+  `),
+  getByTagsPaginated: db.prepare(`
+    SELECT * FROM jobs 
+    WHERE json_array_length(json_extract(tags, '$')) > 0
+    AND (
+      SELECT COUNT(*) 
+      FROM json_each(tags) tag 
+      WHERE LOWER(tag.value) LIKE LOWER(?)
+    ) = ?
+    ORDER BY createdAt DESC
+    LIMIT ? OFFSET ?
+  `),
+  getCountByTags: db.prepare(`
+    SELECT COUNT(*) as count FROM (
+      SELECT id FROM jobs 
+      WHERE json_array_length(json_extract(tags, '$')) > 0
+      AND (
+        SELECT COUNT(*) 
+        FROM json_each(tags) tag 
+        WHERE LOWER(tag.value) LIKE LOWER(?)
+      ) = ?
+    )
   `),
 };
 
@@ -123,6 +151,71 @@ export const dbOperations = {
   getLastUpdated: () => {
     const result = statements.getLastUpdated.get() as LastUpdatedResult;
     return result?.lastUpdated || new Date().toISOString();
+  },
+
+  // Get all jobs with pagination
+  getAllJobsPaginated: (page: number = 1, limit: number = 10) => {
+    const offset = (page - 1) * limit;
+    const jobs = statements.getAllPaginated.all(limit, offset) as DbJob[];
+    const totalCount = (statements.getCount.get() as { count: number }).count;
+
+    return {
+      jobs: jobs.map((job) => ({
+        ...job,
+        tags: JSON.parse(job.tags),
+      })),
+      total: totalCount,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount / limit),
+    };
+  },
+
+  // Get jobs by tags with pagination
+  getJobsByTagsPaginated: (
+    tags: string[],
+    page: number = 1,
+    limit: number = 10
+  ) => {
+    if (tags.length === 0) {
+      return dbOperations.getAllJobsPaginated(page, limit);
+    }
+
+    const offset = (page - 1) * limit;
+
+    // For each tag, we need to ensure it exists in the job's tags array
+    const jobs = tags.reduce((acc, tag) => {
+      const matchingJobs = statements.getByTagsPaginated.all(
+        `%${tag}%`,
+        1,
+        limit,
+        offset
+      ) as DbJob[];
+      return acc.length === 0
+        ? matchingJobs
+        : acc.filter((job) =>
+            matchingJobs.some((matchingJob) => matchingJob.id === job.id)
+          );
+    }, [] as DbJob[]);
+
+    // Get total count for pagination
+    const totalCount = tags.reduce((count, tag) => {
+      const result = statements.getCountByTags.get(`%${tag}%`, 1) as {
+        count: number;
+      };
+      return count + result.count;
+    }, 0);
+
+    return {
+      jobs: jobs.map((job) => ({
+        ...job,
+        tags: JSON.parse(job.tags),
+      })),
+      total: totalCount,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   },
 
   // Get jobs by tags

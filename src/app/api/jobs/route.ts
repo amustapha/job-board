@@ -7,13 +7,28 @@ export async function GET(request: Request) {
     const tags =
       searchParams.get("tags")?.toLowerCase()?.split(",").filter(Boolean) || [];
 
-    // Get jobs with tag filtering at the database level
-    const jobs = dbOperations.getJobsByTags(tags);
+    // Get pagination parameters
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "10", 10);
 
-    // Return the filtered jobs
+    // Validate pagination parameters
+    if (isNaN(page) || page < 1 || isNaN(limit) || limit < 1 || limit > 100) {
+      return NextResponse.json(
+        { error: "Invalid pagination parameters" },
+        { status: 400 }
+      );
+    }
+
+    // Get jobs with tag filtering and pagination at the database level
+    const result = dbOperations.getJobsByTagsPaginated(tags, page, limit);
+
+    // Return the filtered and paginated jobs
     return NextResponse.json({
-      jobs,
-      total: jobs.length,
+      jobs: result.jobs,
+      total: result.total,
+      page: result.page,
+      limit: result.limit,
+      totalPages: result.totalPages,
       lastUpdated: dbOperations.getLastUpdated(),
     });
   } catch (error) {
