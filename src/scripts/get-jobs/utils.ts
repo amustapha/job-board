@@ -98,6 +98,11 @@ export function fixLink(link: string): string {
   return link.replace(DISCARDED_LINK_SUFFIX, "");
 }
 
+export function extractJobId(url: string): string {
+  const urlObj = new URL(url);
+  return urlObj.pathname;
+}
+
 /**
  * Extracts company name and job title from the full title
  * @param title - The full job title
@@ -117,6 +122,8 @@ export function destructureJobTitle(title: string, slugName: string) {
 
   // If not found, try to find from "at" parts
   if (!companyName && atParts.length > 1) {
+    // Remove query parameters and trailing slashes
+
     companyName = findCompanyNameFromParts(atParts, slugParts);
   }
 
@@ -143,6 +150,8 @@ export function destructureJobTitle(title: string, slugName: string) {
 export async function getJob(jobItem: GoogleJobItem): Promise<Job> {
   const { title, link, pagemap } = jobItem;
   const slugName = extractSlugName(link);
+  const fixedLink = fixLink(link);
+  const id = extractJobId(fixedLink);
 
   const imageLink = extractImageLink(pagemap);
   const description = buildDescription(title, pagemap);
@@ -151,11 +160,12 @@ export async function getJob(jobItem: GoogleJobItem): Promise<Job> {
   const { companyName, jobTitle } = destructureJobTitle(title, slugName);
 
   return {
+    id,
     companyName,
     jobTitle,
     tags,
     companyLogo: imageLink,
-    url: fixLink(link),
+    url: fixedLink,
   };
 }
 
