@@ -1,4 +1,3 @@
-import { NextResponse } from "next/server";
 import {
   EXCLUDED_KEYWORDS,
   REQUIRED_KEYWORDS,
@@ -12,10 +11,8 @@ const GOOGLE_CX = process.env.GOOGLE_CX; // Custom Search Engine ID
 
 export async function* getJobs() {
   if (!GOOGLE_API_KEY || !GOOGLE_CX) {
-    return NextResponse.json(
-      { error: "Google API configuration is missing" },
-      { status: 500 }
-    );
+    console.error("Google API configuration is missing");
+    return;
   }
   for (const roles of TECHNICAL_ROLES) {
     try {
