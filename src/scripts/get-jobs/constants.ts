@@ -100,4 +100,5 @@ export const TECHNOLOGY_TAGS = [
 export const DEFAULT_INDEX = "0";
 
 export const HTTPS_PREFIX = "https://";
-export const DISCARDED_LINK_SUFFIX = /\/apply(\?.*)?$/;
+export const DISCARDED_LINK_SUFFIX = /(\/?(apply)?(\?.*)?)$/;
+;
