@@ -1,3 +1,4 @@
+import dotenv from "dotenv";
 import {
   EXCLUDED_KEYWORDS,
   REQUIRED_KEYWORDS,
@@ -5,6 +6,8 @@ import {
 } from "./constants";
 import { getJob, fetchGoogleSearchResults } from "./utils";
 import { GoogleJobItem } from "./types";
+
+dotenv.config();
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
 const GOOGLE_CX = process.env.GOOGLE_CX; // Custom Search Engine ID
