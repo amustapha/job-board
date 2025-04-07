@@ -34,9 +34,11 @@ export function extractImageLink(pagemap: PageMap): string {
  */
 export function buildDescription(title: string, pagemap: PageMap): string {
   return (
-    title + " " + pagemap?.metatags?.[0]?.["og:description"] ||
-    pagemap?.metatags?.[0]?.["twitter:description"] ||
-    ""
+    title +
+    " " +
+    (pagemap?.metatags?.[0]?.["og:description"] ||
+      pagemap?.metatags?.[0]?.["twitter:description"] ||
+      "")
   );
 }
 
