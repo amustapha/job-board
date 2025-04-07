@@ -9,6 +9,7 @@ import {
   BuildingOfficeIcon,
 } from "@heroicons/react/24/outline";
 import { Job } from "@/types/job";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export function JobView({
   companyLogo,
@@ -21,6 +22,22 @@ export function JobView({
   url,
 }: Job) {
   const [imageError, setImageError] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const handleTagClick = (tag: string) => {
+    const currentTags =
+      searchParams.get("tags")?.split(",").filter(Boolean) || [];
+
+    if (!currentTags.includes(tag)) {
+      const newTags = [...currentTags, tag];
+
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tags", newTags.join(","));
+
+      router.push(`/?${params.toString()}`);
+    }
+  };
 
   return (
     <div
@@ -63,16 +80,17 @@ export function JobView({
 
       <div className="flex flex-wrap gap-2 mb-4">
         {tags.map((tag, index) => (
-          <span
+          <button
             key={index}
-            className="text-xs px-2 py-1 rounded transition-colors"
+            onClick={() => handleTagClick(tag)}
+            className="text-xs px-2 py-1 rounded transition-colors hover:opacity-80 cursor-pointer"
             style={{
               backgroundColor: "var(--tag-bg)",
               color: "var(--tag-text)",
             }}
           >
             {tag}
-          </span>
+          </button>
         ))}
       </div>
 
