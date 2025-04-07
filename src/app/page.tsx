@@ -4,7 +4,13 @@ import { Job } from "@/types/job";
 import Link from "next/link";
 import { Suspense } from "react";
 
-async function getJobs(tags?: string[]): Promise<Job[]> {
+interface JobsResponse {
+  jobs: Job[];
+  total: number;
+  lastUpdated: string;
+}
+
+async function getJobs(tags?: string[]): Promise<JobsResponse> {
   const url = new URL("http://localhost:3000/api/jobs");
 
   if (tags && tags.length > 0) {
@@ -32,7 +38,7 @@ export default async function Home({
     typeof resolvedParams.tags === "string"
       ? resolvedParams.tags.split(",").filter(Boolean)
       : [];
-  const jobs = await getJobs(tags);
+  const { jobs, total, lastUpdated } = await getJobs(tags);
 
   return (
     <div className="min-h-screen">
@@ -41,7 +47,7 @@ export default async function Home({
         {tags && tags.length > 0 && (
           <div className="mb-6">
             <h2 className="text-xl font-semibold mb-2 text-text-primary-light dark:text-text-primary-dark">
-              {jobs.length} {jobs.length === 1 ? "job" : "jobs"} found
+              {total} {total === 1 ? "job" : "jobs"} found
             </h2>
             <p className="text-text-secondary-light dark:text-text-secondary-dark">
               Showing results for: {tags.join(", ")}
@@ -64,6 +70,10 @@ export default async function Home({
         <Suspense fallback={<JobsListing jobs={[]} isLoading={true} />}>
           <JobsListing jobs={jobs} />
         </Suspense>
+
+        <div className="mt-8 text-sm text-text-tertiary-light dark:text-text-tertiary-dark">
+          Last updated: {new Date(lastUpdated).toLocaleString()}
+        </div>
       </main>
     </div>
   );
