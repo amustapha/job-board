@@ -1,11 +1,19 @@
 export const TECHNICAL_ROLES = {
   // Software Engineering
-  "Software Engineer": [
+  "Frontend Engineer": [
     "software engineer",
     "software developer",
     "frontend engineer",
-    "backend engineer",
-    "full stack engineer",
+  ],
+  "Backend Engineer": [
+    "software engineer",
+    "software developer",
+    "frontend engineer",
+  ],
+  "Full Stack Engineer": [
+    "software engineer",
+    "software developer",
+    "frontend engineer",
   ],
 
   // Product/Design
@@ -101,4 +109,3 @@ export const DEFAULT_INDEX = "0";
 
 export const HTTPS_PREFIX = "https://";
 export const DISCARDED_LINK_SUFFIX = /(\/?(apply)?(\?.*)?)$/;
-;
