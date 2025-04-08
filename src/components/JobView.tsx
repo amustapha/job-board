@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import {
   MapPinIcon,
@@ -22,8 +22,19 @@ export function JobView({
   url,
 }: Job) {
   const [imageError, setImageError] = useState(false);
+  const [domain, setDomain] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Get the domain on client-side
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      setDomain(
+        hostname === "localhost" ? "job-board.amustapha.com" : hostname
+      );
+    }
+  }, []);
 
   const handleTagClick = (tag: string) => {
     const currentTags =
@@ -36,6 +47,23 @@ export function JobView({
       params.set("tags", newTags.join(","));
 
       router.push(`/?${params.toString()}`);
+    }
+  };
+
+  // Add UTM parameters to the URL
+  const getUrlWithUtmParams = (originalUrl: string) => {
+    try {
+      const urlObj = new URL(originalUrl);
+      urlObj.searchParams.append(
+        "utm_source",
+        domain || "job-board.amustapha.com"
+      );
+      urlObj.searchParams.append("utm_medium", "referral");
+      urlObj.searchParams.append("utm_campaign", "job_listing");
+      return urlObj.toString();
+    } catch (error) {
+      console.error("Error adding UTM parameters:", error);
+      return originalUrl; // Return original URL if there's an error
     }
   };
 
@@ -117,7 +145,7 @@ export function JobView({
       </div>
 
       <a
-        href={url}
+        href={getUrlWithUtmParams(url)}
         target="_blank"
         rel="noopener noreferrer"
         className="block w-full py-2 rounded button-primary text-center"
