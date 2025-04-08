@@ -12,6 +12,8 @@ export function SearchInput() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
+  const [availableRoles, setAvailableRoles] = useState<string[]>([]);
+  const [isLoadingRoles, setIsLoadingRoles] = useState(false);
   const debouncedSearch = useDebounce(search, 300);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
@@ -20,6 +22,29 @@ export function SearchInput() {
     () => searchParams.get("tags")?.split(",").filter(Boolean) || [],
     [searchParams]
   );
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      setIsLoadingRoles(true);
+      if (availableRoles.length > 0) {
+        setIsLoadingRoles(false);
+        return;
+      }
+      try {
+        const response = await fetch("/api/roles");
+        if (response.ok) {
+          const data = await response.json();
+          setAvailableRoles(data.roles);
+        }
+      } catch (error) {
+        console.error("Error fetching roles:", error);
+      } finally {
+        setIsLoadingRoles(false);
+      }
+    };
+
+    fetchRoles();
+  }, [currentFilters, availableRoles]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -78,7 +103,7 @@ export function SearchInput() {
       const newFilters = [...currentFilters, search.trim()];
       router.push(`/?tags=${encodeURIComponent(newFilters.join(","))}`);
       setSearch("");
-    } 
+    }
     setShowSuggestions(false);
   };
 
@@ -201,6 +226,47 @@ export function SearchInput() {
           Search
         </button>
       </form>
+
+      {currentFilters.length === 0 && (
+        <div className="mt-4">
+          <p
+            className=" mb-2"
+            style={{ color: "var(--text-secondary)" }}
+          >
+            Get started by filtering by role:
+          </p>
+          {isLoadingRoles ? (
+            <div className="flex flex-wrap gap-2">
+              {["w-48", "w-32", "w-56", "w-24", "w-64", "w-40"].map((width) => (
+                <div
+                  key={width}
+                  className={`h-8 ${width} rounded animate-pulse`}
+                  style={{
+                    backgroundColor: "var(--tag-bg)",
+                  }}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {availableRoles.map((role) => (
+                <button
+                  key={role}
+                  type="button"
+                  onClick={() => handleSuggestionClick(role)}
+                  className="px-3 py-1 rounded transition-colors cursor-pointer"
+                  style={{
+                    backgroundColor: "var(--tag-bg)",
+                    color: "var(--tag-text)",
+                  }}
+                >
+                  {role}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
