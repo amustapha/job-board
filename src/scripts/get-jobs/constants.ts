@@ -1,21 +1,11 @@
 export const TECHNICAL_ROLES = {
   // Software Engineering
-  "Frontend Engineer": [
-    "software engineer",
-    "software developer",
-    "frontend engineer",
-  ],
-  "Backend Engineer": [
-    "software engineer",
-    "software developer",
-    "frontend engineer",
-  ],
-  "Full Stack Engineer": [
-    "software engineer",
-    "software developer",
-    "frontend engineer",
-  ],
-
+  "Frontend Engineer": ["frontend engineer", "frontend developer"],
+  "Backend Engineer": ["backend engineer", "backend developer"],
+  "Full Stack Engineer": ["software engineer", "software developer"],
+  "Vue.js Engineer": ["vue.js", "vuejs", "vue", "nuxt.js", "nuxtjs"],
+  "React Engineer": ["reactjs", "react", "next.js", "nextjs"],
+  "NestJS Engineer": ["nest.js", "nestjs"],
   // Product/Design
   "Product design": ["product designer"],
 
