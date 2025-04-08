@@ -10,9 +10,23 @@ module.exports = {
       },
       instances: 1,
       autorestart: true,
-      max_memory_restart: "400M",
+      max_memory_restart: "500M",
       restart_delay: 100,
       exp_backoff_restart_delay: 100,
+      watch: true,
+      ignore_watch: [
+        "node_modules",
+        ".next",
+        "logs",
+        "*.log",
+        "*.sqlite",
+        "*.sqlite3",
+        "*.ts",
+        "*.tsx",
+      ],
+      watch_options: {
+        followSymlinks: false,
+      },
     },
     {
       name: "job-updater",
@@ -24,6 +38,20 @@ module.exports = {
       cron_restart: "0 0 * * *", // Run at midnight every day
       autorestart: false,
       max_memory_restart: "500M",
+      watch: true,
+      ignore_watch: [
+        "node_modules",
+        ".next",
+        "logs",
+        "*.log",
+        "*.sqlite",
+        "*.sqlite3",
+        "*.ts",
+        "*.tsx",
+      ],
+      watch_options: {
+        followSymlinks: false,
+      },
     },
   ],
 };
