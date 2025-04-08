@@ -328,12 +328,12 @@ export async function fetchGoogleSearchResults(
   }
 
   // Only append excludedTerms if the array is not empty
-  if (excludedTerms.length > 0) {
-    const formattedExcludedTerms = excludedTerms
-      .map((term) => `"${term}"`)
-      .join(" OR ");
-    url.searchParams.append("excludeTerms", formattedExcludedTerms);
-  }
+  // if (excludedTerms.length > 0) {
+  //   const formattedExcludedTerms = excludedTerms
+  //     .map((term) => `"${term}"`)
+  //     .join(" OR ");
+  //   url.searchParams.append("excludeTerms", formattedExcludedTerms);
+  // }
 
   url.searchParams.append("q", searchQuery);
   url.searchParams.append("sort", "date");
